@@ -1,3 +1,11 @@
+/*
+   NUMHASH reference source code package - reference C implementations
+
+   Copyright 2024, dedmanwalking <dedmanwalking@proton.me>.  You may use this under the
+   terms of the CC0 1.0 Universal license, linked below:
+   - CC0 1.0 Universal : http://creativecommons.org/publicdomain/zero/1.0
+*/
+
 #include "nkdm_problem.h"
 #include "stdlib.h"
 #include "string.h"
@@ -132,7 +140,7 @@ int numhash0km(void* out, const size_t outlen, const void* in, uint64_t inlen, c
         }
     }
 
-    if(keylen) NUMHASH_ROUND(P, (void*)P);                                              // only needed when keylen > 0 to keep safety
+    if(keylen) NUMHASH_ROUND(P, (void*)P);                                              // only needed when keylen > 0 to avoid attacks described in paper
     memcpy(out, P, outlen);                                                             // truncates output
     return 1;
 }
