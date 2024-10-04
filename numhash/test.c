@@ -6,6 +6,8 @@
 
 #define INSIZE (128)
 
+// USE THIS TO TEST NUMHASH
+
 int main(){
     uint8_t data[INSIZE] = {0};
     uint64_t out[8] = {0};
