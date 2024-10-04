@@ -5,7 +5,7 @@ numhash0 is a provably-secure hash function I designed in a couple of weeks.
   - It only uses adds and swaps.
   - Numhash0 is decently fast (40MB/s when compiled using clang and when the initial problem instance is in L1 cache).
     
-For more info, [read the paper](https://github.com/dedman24/numhash0/blob/main/numhash/paper/NUMHASH%20PAPER.pdf).
+For more info, [read the specification](https://github.com/dedman24/numhash0/blob/main/numhash/paper/NUMHASH%20PAPER.pdf).
 
 ## licenses
 This work is released into the public domain with [CC0 1.0](https://github.com/dedman24/numhash0/blob/main/LICENSE).
