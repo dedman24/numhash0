@@ -1,0 +1,20 @@
+in:     ""
+inlen:  0
+key:    ""
+keylen: 0
+out:    6dfd49dc2d156d97fae1237d5942b8c931d0ddeea6e8cabfa617989bcc5af5ae1742d9d6015674d804b8ae53b7150a7f6cb73cee6f3fc438174cce21245e3469
+outlen: 64
+
+in:     "abc"
+inlen:  3
+key:    ""
+keylen: 0
+out:    8edbcab557551d72f378d28ca48e58db44d0e80a87c2d08ab44e8993abdd660db003c6a9fd8fce48bb1f25763db249024792ed9edffa7cc3b19b8e7efee219d5
+outlen: 64
+
+in:     128-byte null string
+inlen:  128
+key:    ""
+keylen: 0
+out:    03b3b1b6ab7009292ccb9ca0721bfbf5ffe664cb8d0f88936d71db092a4156a350e89568a46f13e430701fba8c03c52840ffcb879a51098f81966647a60298d7
+outlen: 64
