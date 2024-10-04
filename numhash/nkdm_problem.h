@@ -1,3 +1,11 @@
+/*
+   NUMHASH reference source code package - reference C implementations
+
+   Copyright 2024, dedmanwalking <dedmanwalking@proton.me>.  You may use this under the
+   terms of the CC0 1.0 Universal license, linked below:
+   - CC0 1.0 Universal : http://creativecommons.org/publicdomain/zero/1.0
+*/
+
 #include "stdint.h"
 
 // blake2xb null-length string with output length of 64*128 bytes
