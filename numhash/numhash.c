@@ -55,10 +55,10 @@ void NUMHASH_ROUND(uint64_t final[8], uint8_t* in){
     uint64_t buffer[8] = {0};
 
     for(int i = 0; i < 128; i++){
-        scramble_sum(buffer, (void*)nkdm_problem[i], in[i]);
-        scramble_sum(buffer, (void*)nkdm_problem[i], (in[i]<<2) | (in[i]>>6));
-        scramble_sum(buffer, (void*)nkdm_problem[i], (in[i]<<4) | (in[i]>>4));
-        scramble_sum(buffer, (void*)nkdm_problem[i], (in[i]<<6) | (in[i]>>2));
+        scramble_sum(buffer, (void*)nkdm_problem[i], in[i]);                            // without this "+" finding a collision is trivial
+        scramble_sum(buffer, (void*)nkdm_problem[i + 1], (in[i]<<2) | (in[i]>>6));
+        scramble_sum(buffer, (void*)nkdm_problem[i + 2], (in[i]<<4) | (in[i]>>4));
+        scramble_sum(buffer, (void*)nkdm_problem[i + 3], (in[i]<<6) | (in[i]>>2));
     }
     
     final[0] = buffer[0];
