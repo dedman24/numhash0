@@ -68,11 +68,11 @@ void NUMHASH_ROUND(uint64_t final[8], uint8_t* in){
 
     for(int i = 0; i < 128; i++){
         scramble_sum(buffer, (void*)nkdm_problem[i], in[i]);                            // without this xor step finding a collision is trivial
-        NUMHASH_XOR(temp, (void*)nkdm_problem[i], (void*)hexDigitsOfPi_NUMHASH);        // can be done by VPXOR
+        NUMHASH_XOR(temp, (void*)nkdm_problem[i], (void*)(hexDigitsOfPi_NUMHASH));      // can be done by VPXOR
         scramble_sum(buffer, (void*)temp, (in[i]<<2) | (in[i]>>6));                     
-        NUMHASH_XOR(temp, (void*)nkdm_problem[i], (void*)hexDigitsOfPi_NUMHASH + 8);
+        NUMHASH_XOR(temp, (void*)nkdm_problem[i], (void*)(hexDigitsOfPi_NUMHASH + 8));  // I AM ABOUT TO CRASH OUT THIS DOESN'T WORK AS INTENDED!
         scramble_sum(buffer, (void*)temp, (in[i]<<4) | (in[i]>>4));
-        NUMHASH_XOR(temp, (void*)nkdm_problem[i], (void*)hexDigitsOfPi_NUMHASH + 16);
+        NUMHASH_XOR(temp, (void*)nkdm_problem[i], (void*)(hexDigitsOfPi_NUMHASH + 16));
         scramble_sum(buffer, (void*)temp, (in[i]<<6) | (in[i]>>2));
     }
     
