@@ -7,5 +7,8 @@ numhash0 is a provably-secure hash function I designed in a couple of weeks.
     
 For more info, [read the specification](https://github.com/dedman24/numhash0/blob/main/numhash/paper/NUMHASH%20PAPER.pdf).
 
+## usage
+just download [nkdm_problem.h](https://github.com/dedman24/numhash0/blob/main/numhash/ndkm_problem.h) and [numhash.c](https://github.com/dedman24/numhash0/blob/main/numhash/numhash.c) and include numhash.c into your project.
+
 ## licenses
 This work is released into the public domain with [CC0 1.0](https://github.com/dedman24/numhash0/blob/main/LICENSE).
