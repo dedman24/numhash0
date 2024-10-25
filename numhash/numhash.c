@@ -50,15 +50,30 @@ void scramble_sum(uint64_t out[8], uint64_t in[8], uint8_t how){
     out[7] += t[7];
 }
 
+void NUMHASH_XOR(uint64_t dst[8], uint64_t src0[8], uint64_t src1[8]){
+    dst[0] = src0[0] ^ src1[0];
+    dst[1] = src0[1] ^ src1[1];
+    dst[2] = src0[2] ^ src1[2];
+    dst[3] = src0[3] ^ src1[3];
+    dst[4] = src0[4] ^ src1[4];
+    dst[5] = src0[5] ^ src1[5];
+    dst[6] = src0[6] ^ src1[6];
+    dst[7] = src0[7] ^ src1[7];
+}
+
 // numhash compression function
 void NUMHASH_ROUND(uint64_t final[8], uint8_t* in){
     uint64_t buffer[8] = {0};
+    uint64_t temp[8];
 
     for(int i = 0; i < 128; i++){
-        scramble_sum(buffer, (void*)nkdm_problem[i], in[i]);                            // without this "+" finding a collision is trivial
-        scramble_sum(buffer, (void*)nkdm_problem[i + 1], (in[i]<<2) | (in[i]>>6));
-        scramble_sum(buffer, (void*)nkdm_problem[i + 2], (in[i]<<4) | (in[i]>>4));
-        scramble_sum(buffer, (void*)nkdm_problem[i + 3], (in[i]<<6) | (in[i]>>2));
+        scramble_sum(buffer, (void*)nkdm_problem[i], in[i]);                            // without this xor step finding a collision is trivial
+        NUMHASH_XOR(temp, (void*)nkdm_problem[i], (void*)hexDigitsOfPi_NUMHASH);        // can be done by VPXOR
+        scramble_sum(buffer, (void*)temp, (in[i]<<2) | (in[i]>>6));                     
+        NUMHASH_XOR(temp, (void*)nkdm_problem[i], (void*)hexDigitsOfPi_NUMHASH + 8);
+        scramble_sum(buffer, (void*)temp, (in[i]<<4) | (in[i]>>4));
+        NUMHASH_XOR(temp, (void*)nkdm_problem[i], (void*)hexDigitsOfPi_NUMHASH + 16);
+        scramble_sum(buffer, (void*)temp, (in[i]<<6) | (in[i]>>2));
     }
     
     final[0] = buffer[0];
@@ -85,11 +100,14 @@ int numhash0m(void* out, const size_t outlen, const void* in, uint64_t inlen){
         input_processed += BLOCK;
     }
 
-    uint8_t buf[BLOCK];
-    memcpy(buf, (uint8_t*)in + input_processed, inlen);
-    memset(buf + inlen, 0, BLOCK-inlen);
-    NUMHASH_ROUND(P + 8, buf);
-    NUMHASH_ROUND(P, (void*)P);                                                         // numhash0m should NOT be used for hash keying
+    if(inlen){
+        uint8_t buf[BLOCK];
+        memcpy(buf, (uint8_t*)in + input_processed, inlen);
+        memset(buf + inlen, 0, BLOCK-inlen);
+        NUMHASH_ROUND(P + 8, buf);
+        NUMHASH_ROUND(P, (void*)P);                                                     // numhash0m should NOT be used for hash keying
+    }
+    
     
     memcpy(out, P, outlen);                                                             // truncates output
     return 1;
@@ -102,6 +120,7 @@ int numhash0km(void* out, const size_t outlen, const void* in, uint64_t inlen, c
     if(outlen > MAXOUTLEN) return 0;
 
     uint64_t P[16] = { outlen, inlen, keylen };
+    uint8_t buf[BLOCK];
 
     uint64_t input_processed = 0;
     while(inlen > BLOCK){
@@ -111,15 +130,16 @@ int numhash0km(void* out, const size_t outlen, const void* in, uint64_t inlen, c
         input_processed += BLOCK;
     }
 
-    uint8_t buf[BLOCK];
-    memcpy(buf, (uint8_t*)in + input_processed, inlen);
-    memset(buf + inlen, 0, BLOCK-inlen);
-    NUMHASH_ROUND(P + 8, buf);
-    NUMHASH_ROUND(P, (void*)P);
+    if(inlen){
+        memcpy(buf, (uint8_t*)in + input_processed, inlen);
+        memset(buf + inlen, 0, BLOCK-inlen);
+        NUMHASH_ROUND(P + 8, buf);
+        NUMHASH_ROUND(P, (void*)P);
+    }
 
     if(keylen){
         if(keylen <= 128){                                                              // most common option; why would key be larger than 128B? IDK but numhash allows for "key" to be 2**64-1 bytes in length
-            memcpy(buf, key, inlen);
+            memcpy(buf, key, keylen);
             memset(buf + keylen, 0, BLOCK-keylen);
             NUMHASH_ROUND(P + 8, buf);
             NUMHASH_ROUND(P, (void*)P);
